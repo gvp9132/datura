@@ -1,21 +1,6 @@
-import {countGVPPrivate} from "./js/count"
+import { subtract } from "./js/math.js";
 import "./css/index.css" ;
-import "./less/index.less" ;
-import "./sass/index.sass" ;
-import "./css/iconfont.css" ;
 
-// console.log("你好世界 咱俩一起玩啊!")
-
-
-countGVPPrivate() ;
-
-if(module.hot){
-    console.log("支持热更新") // 1
-    module.hot.accept("./js/count", () => {
-        console.log("热更新了") // 3
-        countGVPPrivate() ;
-    })
-}
-
-
-console.log("hello world.222") // 2
+let res = subtract(1,2)
+let res1 = subtract(2,3)
+console.log(res,res1)

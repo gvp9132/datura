@@ -116,7 +116,11 @@ module.exports = {
                                     // 开启缓存
                                     cacheDirectory: true,
                                     // 关闭缓存压缩
-                                    cacheCompression: false
+                                    cacheCompression: false ,
+                                    plugins: [
+                                        // 减少冗余代码
+                                        "@babel/plugin-transform-runtime",
+                                    ]
                                 }
                             }
                         ],
