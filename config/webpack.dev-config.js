@@ -1,7 +1,12 @@
 const path = require('path');
+const os = require('os');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const ESLintWebpackPlugin = require("eslint-webpack-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
+// 获取cpu核心数量
+const threads = os.cpus().length - 2;
 
 
 // const path = require('path');
@@ -71,15 +76,25 @@ module.exports = {
                     {
                         // 处理js文件
                         test: /\.js$/,
-                        // 排除node_modules文件夹
+                        // 排除node_modules文件夹,不处理node_modules文件夹中的js文件
                         exclude: "/node_modules",
-                        loader: 'babel-loader',
-                        options: {
-                            // 开启缓存
-                            cacheDirectory: true,
-                            // 关闭缓存压缩
-                            cacheCompression: false
-                        }
+                        use: [
+                            {
+                                loader: 'thread-loader',
+                                options: {
+                                    workers: threads
+                                }
+                            },
+                            {
+                                loader: 'babel-loader',
+                                options: {
+                                    // 开启缓存
+                                    cacheDirectory: true,
+                                    // 关闭缓存压缩
+                                    cacheCompression: false
+                                }
+                            }
+                        ],
                     }
                 ]
             }
@@ -106,6 +121,18 @@ module.exports = {
             filename: 'static/css/[name].css'
         })
     ],
+    // 处理压缩的插件
+    optimization: {
+        minimizer: [
+            // 压缩css
+            new CssMinimizerPlugin(),
+            // 压缩js
+            new TerserPlugin({
+                // 开启多线程
+                parallel: threads,
+            })
+        ]
+    },
     // 开发服务器(模式)
     devServer: {
         // 服务器压缩

@@ -1,8 +1,12 @@
 const path = require('path');
+const os = require('os');
 const ESLintWebpackPlugin = require("eslint-webpack-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
+
+const threads = os.cpus().length - 2;
 
 /**
  *  获取样式加载器
@@ -99,13 +103,23 @@ module.exports = {
                         test: /\.js$/,
                         // 排除node_modules文件夹,不处理node_modules文件夹中的js文件
                         exclude: "/node_modules",
-                        loader: 'babel-loader',
-                        options: {
-                            // 开启缓存
-                            cacheDirectory: true,
-                            // 关闭缓存压缩
-                            cacheCompression: false
-                        }
+                        use: [
+                            {
+                                loader: 'thread-loader',
+                                options: {
+                                    workers: threads
+                                }
+                            },
+                            {
+                                loader: 'babel-loader',
+                                options: {
+                                    // 开启缓存
+                                    cacheDirectory: true,
+                                    // 关闭缓存压缩
+                                    cacheCompression: false
+                                }
+                            }
+                        ],
                     }
                 ]
             }
@@ -123,6 +137,8 @@ module.exports = {
             cache: true,
             // 设置缓存的目录
             //cacheLocation: 'node_modules/.cache/.eslintcache',
+            // 开启eslin的多线程处理
+            threads,
         }),
         // 配置html
         new HtmlWebpackPlugin({
@@ -133,18 +149,19 @@ module.exports = {
             // 输出css文件的名称
             filename: 'static/css/[name].css'
         }),
-        new CssMinimizerPlugin()
     ],
-    // 生产模式不需要devServer
-    // devServer: {
-    //     // 服务器压缩
-    //     compress: true,
-    //     host: 'localhost',
-    //     // 服务器端口
-    //     port: 3001,
-    //     // 自动打开浏览器
-    //     open: true
-    // } ,
+    // 处理压缩的插件
+    optimization: {
+        minimizer: [
+            // 压缩css
+            new CssMinimizerPlugin(),
+            // 压缩js
+            new TerserPlugin({
+                // 开启多线程
+                parallel: threads,
+            })
+        ]
+    },
     mode: 'production',
     devtool: 'source-map'
 }
