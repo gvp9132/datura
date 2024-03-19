@@ -73,9 +73,13 @@ module.exports = {
                         test: /\.js$/,
                         // 排除node_modules文件夹
                         exclude: "/node_modules",
-                        use: {
-                            loader: 'babel-loader',
-                        },
+                        loader: 'babel-loader',
+                        options: {
+                            // 开启缓存
+                            cacheDirectory: true,
+                            // 关闭缓存压缩
+                            cacheCompression: false
+                        }
                     }
                 ]
             }
@@ -89,6 +93,8 @@ module.exports = {
             // 配置需要检查的文件夹
             context: 'src',
             exclude: ['node_modules'],
+            // 开启缓存,使用默认目录
+            cache: true,
         }),
         // 配置html
         new HtmlWebpackPlugin({

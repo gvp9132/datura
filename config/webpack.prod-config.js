@@ -3,7 +3,6 @@ const ESLintWebpackPlugin = require("eslint-webpack-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
-const { on } = require('events');
 
 /**
  *  获取样式加载器
@@ -100,9 +99,13 @@ module.exports = {
                         test: /\.js$/,
                         // 排除node_modules文件夹,不处理node_modules文件夹中的js文件
                         exclude: "/node_modules",
-                        use: {
-                            loader: 'babel-loader',
-                        },
+                        loader: 'babel-loader',
+                        options: {
+                            // 开启缓存
+                            cacheDirectory: true,
+                            // 关闭缓存压缩
+                            cacheCompression: false
+                        }
                     }
                 ]
             }
@@ -116,6 +119,10 @@ module.exports = {
             // 配置需要检查的文件夹
             context: 'src',
             exclude: ['node_modules'],
+            // 开启eslint缓存
+            cache: true,
+            // 设置缓存的目录
+            //cacheLocation: 'node_modules/.cache/.eslintcache',
         }),
         // 配置html
         new HtmlWebpackPlugin({
