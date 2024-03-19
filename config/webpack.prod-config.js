@@ -98,16 +98,11 @@ module.exports = {
                     {
                         // 处理js文件
                         test: /\.js$/,
-                        // 排除node_modules文件夹
-                        exclude: /node_modules/,
+                        // 排除node_modules文件夹,不处理node_modules文件夹中的js文件
+                        exclude: "/node_modules",
                         use: {
                             loader: 'babel-loader',
                         },
-                        // 配置babel可以使用配置文件
-                        // options: {
-                        //     // 预设: 只能预设
-                        //     presets: ["@babel/preset-env"]
-                        // }
                     }
                 ]
             }
@@ -120,6 +115,7 @@ module.exports = {
         new ESLintWebpackPlugin({
             // 配置需要检查的文件夹
             context: 'src',
+            exclude: ['node_modules'],
         }),
         // 配置html
         new HtmlWebpackPlugin({
