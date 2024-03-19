@@ -1,6 +1,6 @@
-import { subtract } from "./js/math.js";
-import "./css/index.css" ;
+const print = (msg,up) => console.log( up ? msg : msg.toUpperCase());
+const { getElementById } = require("./js/handler");
 
-let res = subtract(1,2)
-let res1 = subtract(2,3)
-console.log(res,res1)
+getElementById("sime").innerHTML = "hello my is main" ;
+print("hello my is main");
+print("hello my is main upcase",true)

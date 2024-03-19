@@ -5,8 +5,10 @@
   "main": "index.js",
   "scripts": {
     "start": "npm run dev",
+    "test": "npm run testing" ,
     "dev": "webpack server --config ./config/webpack.dev-config.js",
-    "build": "webpack --config ./config/webpack.prod-config.js"
+    "build": "webpack --config ./config/webpack.prod-config.js",
+    "testing": "webpack --config ./config/webpack.test-config.js"
   },
   "keywords": [],
   "author": "",
